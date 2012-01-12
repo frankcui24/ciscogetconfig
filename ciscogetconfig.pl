@@ -94,45 +94,45 @@ foreach my $routerref (@routerlist)
 
 sub fetchconfig($)
 {
-		my $routerref = shift;
-		eval 
-		{ 
-				msg("|$routerref->{'routername'}| : Starting the connection..." , $verbose) ;
-				my $session = Net::Telnet::Cisco->new(Host => $routerref->{'host'}); 
+	my $routerref = shift;
+	eval 
+	{ 
+		msg("|$routerref->{'routername'}| : Starting the connection..." , $verbose) ;
+		my $session = Net::Telnet::Cisco->new(Host => $routerref->{'host'}); 
                 msg("|$routerref->{'routername'}| : Telnet Connection Established" , $verbose) ;
-				if (defined $routerref->{'username'})
-				{
-						$session->login($routerref->{'username'}, $routerref->{'password'});
-				}
-				else
-				{
-						$session->login($routerref->{'password'});
-				}
+		if (defined $routerref->{'username'})
+		{
+			$session->login($routerref->{'username'}, $routerref->{'password'});
+		}
+		else
+		{
+			$session->login($routerref->{'password'});
+		}
                 msg("|$routerref->{'routername'}| : Telnet Authentication Passed" , $verbose) ;
-				$session->enable($routerref->{'enable'});
-				msg("|$routerref->{'routername'}| : Getting into priviledged mode" , $verbose) ;
+		$session->enable($routerref->{'enable'});
+		msg("|$routerref->{'routername'}| : Getting into priviledged mode" , $verbose) ;
                 my @config = $session->cmd('show run');
                 msg("|$routerref->{'routername'}| : Fetching the config to local machine, now saving it...", $verbose) ;
-				unless ( -d $routerref->{'directory'})
-				{
-						msg("|$routerref->{'routername'}| : Specified directory $routerref->{'directory'} doesn't exist,trying to create it",$verbose) ;
-						mkdir $routerref->{'directory'};
-				}
-				msg ("|$routerref->{'routername'}| : Change into directory : $routerref->{'directory'}",$verbose);
-				chdir $routerref->{'directory'};
-				if ( -f $routerref->{'routername'})
-				{
-						msg("|$routerref->{'routername'}| : specified routername for already exists, not overriding)", $verbose);
-				}
-				else
-				{
-						open (my $fh,">",$routerref->{'routername'} . ".cfg");
-						print $fh @config;
-						my $path = &catfile ($routerref->{'directory'},$routerref->{'routername'} . ".cfg");
-						msg("|$routerref->{'routername'}| : successfully fetch and save the configuration file to $path", $verbose);
-				}
-		};
-		error("error occured in fetching or saving config for |$routerref->{'routername'}| : $@" , $verbose) if ($@);
+		unless ( -d $routerref->{'directory'})
+		{
+            		msg("|$routerref->{'routername'}| : Specified directory $routerref->{'directory'} doesn't exist,trying to create it",$verbose) ;
+			mkdir $routerref->{'directory'};
+		}
+		msg ("|$routerref->{'routername'}| : Change into directory : $routerref->{'directory'}",$verbose);
+		chdir $routerref->{'directory'};
+		if ( -f $routerref->{'routername'})
+		{
+			msg("|$routerref->{'routername'}| : specified routername for already exists, not overriding)", $verbose);
+		}
+		else
+		{
+			open (my $fh,">",$routerref->{'routername'} . ".cfg");
+			print $fh @config;
+			my $path = &catfile ($routerref->{'directory'},$routerref->{'routername'} . ".cfg");
+			msg("|$routerref->{'routername'}| : successfully fetch and save the configuration file to $path", $verbose);
+		}
+	};
+	error("error occured in fetching or saving config for |$routerref->{'routername'}| : $@" , $verbose) if ($@);
 }
 
 for my $routerref (@routerlist)
