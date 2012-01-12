@@ -44,7 +44,7 @@ my %router = ();
 my $linenum = 0;
 while ($_ = <$CONF>)
 {
-    $linenum++;
+	$linenum++;
 	# some processing of config file
 	next if /^#/;
 	next if /^\s*$/;
