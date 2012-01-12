@@ -137,6 +137,6 @@ sub fetchconfig($)
 
 for my $routerref (@routerlist)
 {
-    msg("Trying to fecthing Configuration from |$routerref->{'routername'}|", $verbose);
+    msg("Trying to fecth Configuration from |$routerref->{'routername'}|", $verbose);
     &fetchconfig($routerref);
 }
