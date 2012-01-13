@@ -113,6 +113,7 @@ sub fetchconfig($)
 		msg("|$routerref->{'routername'}| : Getting into priviledged mode" , $verbose) ;
                 my @config = $session->cmd('show run');
                 msg("|$routerref->{'routername'}| : Fetching the config to local machine, now saving it...", $verbose) ;
+                $session->close;
 		unless ( -d $routerref->{'directory'})
 		{
             		msg("|$routerref->{'routername'}| : Specified directory $routerref->{'directory'} doesn't exist,trying to create it",$verbose) ;
@@ -130,6 +131,7 @@ sub fetchconfig($)
 			print $fh @config;
 			my $path = &catfile ($routerref->{'directory'},$routerref->{'routername'} . ".cfg");
 			msg("|$routerref->{'routername'}| : successfully fetch and save the configuration file to $path", $verbose);
+			close $fh;
 		}
 	};
 	error("error occured in fetching or saving config for |$routerref->{'routername'}| : $@" , $verbose) if ($@);
